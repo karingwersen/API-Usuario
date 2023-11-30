@@ -1,5 +1,5 @@
-FROM mongo:nanoserver-1809
+FROM mongo:7.0.4
 
 EXPOSE 27017
 
-CMD ["mongod", "--bind_ip_all"]
+CMD ["mongod"]
