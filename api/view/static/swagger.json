@@ -1,0 +1,301 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API de usuario",
+    "description": "Swagger para a API de usuario.",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "karin.ingwersen96@gmail.com"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "host": "localhost:5000",
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/listar-usuarios": {
+      "get": {
+        "description": "Retorna todos os usuários cadastrados.",
+        "operationId": "findUsuarios",
+        "produces": [
+          "application/json",
+          "application/xml",
+          "text/xml",
+          "text/html"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "lista de usuários",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Usuario"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/v1/detalhar-usuario": {
+      "get": {
+        "description": "Retorna os detalhes de um usuário de acordo com seu email.",
+        "operationId": "detailsUsuario",
+        "produces": [
+          "application/json",
+          "application/xml",
+          "text/xml",
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "ID do usuário para buscar",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "usuário response",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/v1/criar-usuario": {
+      "post": {
+          "description": "Cria um novo usuário no banco.",
+          "operationId": "addUsuario",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "usuario",
+              "in": "body",
+              "description": "Usuário a ser criado.",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/NewUsuario"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Usuário criado com sucesso"
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/ErrorModel"
+              }
+            }
+          }
+      }
+    },
+    "/v1/editar-usuario": {
+      "put": {
+          "description": "Edita informações de um usuário",
+          "operationId": "updateUsuario",
+          "produces": [
+            "application/json"
+          ],
+           "parameters": [
+          {
+            "name": "cpf",
+            "in": "query",
+            "description": "CPF do usuário a ser editado",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "usuario",
+            "in": "body",
+            "description": "Novas informações de usuário.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewUsuarioEdit"
+            }
+          }
+        ],
+          "responses": {
+            "202": {
+              "description": "Usuário alterado com sucesso"
+            },
+            "default": {
+              "description": "unexpected error",
+              "schema": {
+                "$ref": "#/definitions/ErrorModel"
+              }
+            }
+          }
+      }
+    },
+    "/v1/alterar-senha-usuario": {
+      "put": {
+        "description": "Altera a senha de um usuário",
+        "operationId": "updateSenhaUsuario",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "query",
+            "description": "CPF do usuário a ter a senha alterada",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "usuario",
+            "in": "body",
+            "description": "Nova senha de usuário.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewUsuarioSenha"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Senha do usuário alterada com sucesso."
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Usuario": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NewUsuario"
+        },
+        {
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "NewUsuarioEdit": {
+      "type": "object",
+      "required": [
+        "nome",
+        "sobrenome",
+        "email",
+        "data_de_nascimento"
+      ],
+      "properties": {
+        "nome": {
+          "type": "string"
+        },
+        "sobrenome": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "data_de_nascimento": {
+          "type": "string"
+        }
+      }
+    },
+    "NewUsuarioSenha": {
+      "type": "object",
+      "required": [
+        "senha"
+      ],
+      "properties": {
+        "senha": {
+          "type": "string"
+        }
+      }
+    },
+    "NewUsuario": {
+      "type": "object",
+      "required": [
+        "nome",
+        "sobrenome",
+        "email",
+        "senha",
+        "data_de_nascimento",
+        "cpf"
+      ],
+      "properties": {
+        "nome": {
+          "type": "string"
+        },
+        "sobrenome": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "senha": {
+          "type": "string"
+        },
+        "data_de_nascimento": {
+          "type": "string"
+        },
+        "cpf": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorModel": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
